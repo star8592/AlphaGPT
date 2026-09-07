@@ -1,39 +1,56 @@
-# AlphaGPT
+# AlphaFactory
 
-> [!IMPORTANT]
-> GitHub 的 issue 并非被设计为打卡工具！仅用于「打卡」「留名」的 issue 将会被直接删除。若您需要社群，请考虑 [DeepQuant](https://deepquant.one/) / QQ群组:1078080636。
+Clean-room Rust research infrastructure for systematic alpha discovery.
 
-> [!IMPORTANT]
-> 若您在加密市场进行交易，另可参考 [Defense in Predatory Markets: A Differential Game Framework for AMM Liquidity via Uniswap V4 Hooks](https://github.com/imbue-bit/no_JIT) 进行做市。笔者懒得向会议投稿了。若有疑问，请联系 imbue2025@outlook.com. BTW，对该仓库代码进行 live trading 前作适当的修改可能会出现意想不到的业绩。
+This codebase is developed independently from first principles. It does **not** reuse the original AlphaGPT implementation, model, data pipeline, Solana execution code, or project structure.
 
-## What happened？
+## V0.1 goal
 
-目前双方已达成和解。
+Prove or falsify one claim:
 
-## 去中心化
+> A small research system can discover at least one factor that survives a completely sealed out-of-sample holdout after realistic costs, without look-ahead or survivorship leakage.
 
-目前双方已达成和解。
+## Non-negotiable invariants
 
-## 责任免除
+- Point-in-time data only.
+- Future observations must never change past factor values.
+- No survivorship-selected historical universe.
+- Search never sees the final holdout.
+- Warm-up history stays missing; it is never backfilled from the future.
+- Transaction costs and execution assumptions are explicit.
+- Same data + formula + seed must be deterministic.
+- A failed holdout is a failed experiment; thresholds are not relaxed after seeing it.
 
-目前双方已达成和解。
+## Architecture
 
-## Abstract
+```text
+Point-in-time data contract
+        ↓
+Causal feature operators
+        ↓
+Formula DSL + canonical representation
+        ↓
+Rust evaluator
+        ↓
+Walk-forward / purge / embargo
+        ↓
+IC / ICIR / turnover / drawdown / costs
+        ↓
+Alpha registry
+        ↓
+Searchers (later: random / GP / RL / LLM)
+```
 
-目前双方已达成和解。
+## Current scope
 
-## Motivation
+V0.1 intentionally excludes live trading, exchange credentials, private keys, LLM agents, and neural-network search. Correctness and falsifiability come first.
 
-目前双方已达成和解。
+## Local qualification
 
-## This was their money-making machine. Now it's your public library.
+```bash
+cargo fmt --all -- --check
+cargo test --workspace
+cargo clippy --workspace --all-targets -- -D warnings
+```
 
-目前双方已达成和解。
-
-## OH! NO!
-
-目前双方已达成和解。
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=imbue-bit/AlphaGPT&type=date&legend=top-left)](https://www.star-history.com/#imbue-bit/AlphaGPT&type=date&legend=top-left)
+Research compute is intended to run locally/self-hosted. GitHub is source control, not the compute plane.
